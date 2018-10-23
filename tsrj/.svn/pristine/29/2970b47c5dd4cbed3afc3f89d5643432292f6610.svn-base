@@ -1,0 +1,37 @@
+package org.tsrj.api.controller.amap;
+
+import org.apache.http.protocol.HTTP;
+import org.tsrj.common.domain.ResultBody;
+import org.tsrj.service.map.MapService;
+import org.tsrj.service.map.vo.GeocodeVO;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * @Author: qh-zhong
+ * @Date: 2018/5/8
+ */
+public class MapController {
+
+    @Resource
+    private MapService mapService;
+
+    /**
+     * 地理编码
+     * @param request
+     * @return
+     */
+    public ResultBody geoCode(HttpServletRequest request, GeocodeVO vo) throws Exception {
+        return mapService.getGeoCodeByAmap(vo);
+    }
+
+    /**
+     * 逆地理编码
+     * @param request
+     * @return
+     */
+    public ResultBody regeoCode(HttpServletRequest request){
+        return mapService.regeoCode();
+    }
+}

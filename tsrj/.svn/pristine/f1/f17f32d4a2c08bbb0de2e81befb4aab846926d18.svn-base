@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-4.2.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-4.2.xsd 
+http://www.springframework.org/schema/mvc 
+http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop.xsd
+">
+	<!-- 自动扫描controller包下的所有类，使其认为spring mvc的控制器 -->
+	<context:component-scan base-package="org.tsrj.api">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<bean id="exceptionHandler" class="org.tsrj.common.web.intercept.DefaultExceptionHandler" />
+	<aop:aspectj-autoproxy />
+	<mvc:annotation-driven validator="validator"
+		conversion-service="conversionService">
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.tsrj.common.web.converter.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes" value="application/json" />
+				<property name="customPropertyPreFilter" ref="customPropertyPreFilter" />
+				<property name="serializerFeature">
+					<array>
+						<!-- null的字段不输出 -->
+						<value>WriteMapNullValue</value>
+						<!-- 输出key时使用双引号 -->
+						<value>QuoteFieldNames</value>
+						<!-- 数值如果为null,输出为0 -->
+						<value>WriteNullNumberAsZero</value>
+						<!-- 字符类型字段如果为null,输出"" -->
+						<value>WriteNullStringAsEmpty</value>
+						<!-- Boolean字段如果为null,输出Falsh -->
+						<value>WriteNullBooleanAsFalse</value>
+					</array>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="formatters">
+			<set>
+				<bean
+					class="org.tsrj.common.web.converter.DecryptionConversionServiceFactoryBean" />
+			</set>
+		</property>
+		<property name="converters">
+			<set>
+				<bean class="org.tsrj.common.web.converter.DateConverter" />
+			</set>
+		</property>
+	</bean>
+
+	<bean id="customPropertyPreFilter" class="org.tsrj.common.web.converter.CustomPropertyPreFilter" />
+
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+		<property name="validationMessageSource" ref="messageSource" />
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:message</value>
+				<value>classpath:org/hibernate/validator/ValidationMessages</value>
+			</list>
+		</property>
+		<property name="useCodeAsDefaultMessage" value="false" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="cacheSeconds" value="600" />
+	</bean>
+
+	<!-- 拦截器 -->
+	<mvc:interceptors>
+		<!-- 接口必须登录才可以访问 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="org.tsrj.common.web.interceptor.ResourceAuthHandleInterceptor">
+				<property name="annotationClass"
+					value="org.tsrj.common.annotation.ResourceAuthAnnotation" />
+				<property name="handlerInterceptor">
+					<array>
+						<bean
+							class="org.tsrj.common.web.interceptor.RequestSignHandleInterceptor" />
+						<bean class="org.tsrj.common.web.interceptor.TokenHandleInterceptor" />
+					</array>
+				</property>
+			</bean>
+		</mvc:interceptor>
+		<!-- 部分接口支持会员和非会员访问 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="org.tsrj.common.web.interceptor.ResourceAuthHandleInterceptor">
+				<property name="annotationClass" value="org.tsrj.common.annotation.TokenAnnotation" />
+				<property name="handlerInterceptor">
+					<array>
+						<bean class="org.tsrj.common.web.interceptor.UserHandleInterceptor" />
+					</array>
+				</property>
+			</bean>
+		</mvc:interceptor>
+		<!-- 接口必须登录才可以访问 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="org.tsrj.common.web.interceptor.ResourceAuthHandleInterceptor">
+				<property name="annotationClass"
+					value="org.tsrj.common.annotation.MemberAuthAnnotation" />
+				<property name="handlerInterceptor">
+					<array>
+						<bean
+							class="org.tsrj.common.web.interceptor.RequestSignHandleInterceptor" />
+						<bean class="org.tsrj.common.web.interceptor.TokenHandleInterceptor" />
+					</array>
+				</property>
+			</bean>
+		</mvc:interceptor>
+		<!-- 防止表单重复提交 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="org.tsrj.common.web.interceptor.ResourceAuthHandleInterceptor">
+				<property name="annotationClass"
+					value="org.tsrj.common.annotation.TokenizeRequestCheckAnnotation" />
+				<property name="handlerInterceptor">
+					<array>
+						<bean
+							class="org.tsrj.common.web.interceptor.TokenizeRequestCheckHandleInterceptor" />
+					</array>
+				</property>
+			</bean>
+		</mvc:interceptor>
+		<!-- 处理事件触发的拦截器 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="org.tsrj.api.interceptor.AccessHandlerInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!-- swagger 配置 -->
+	<mvc:annotation-driven />
+	<!-- 将 springSwaggerConfig加载到spring容器 -->
+	<bean class="com.mangofactory.swagger.configuration.SpringSwaggerConfig" />
+	<!-- 将自定义的swagger配置类加载到spring容器 -->
+	<bean class="org.tsrj.api.swagger.SwaggerConfig" />
+	<mvc:resources location="/WEB-INF/swagger/" mapping="/swagger/**"></mvc:resources>
+
+</beans>

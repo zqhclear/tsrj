@@ -1,0 +1,59 @@
+package org.tsrj.common.amp;
+
+/**
+ * @Author: qh-zhong
+ * @Date: 2018/5/8
+ */
+public enum MapUrlEnums {
+    /**
+     * 地理编码：将详细的结构化地址转换为高德经纬度坐标。且支持对地标性名胜景区、建筑物名称解析为高德经纬度坐标。
+     * 结构化地址举例：北京市朝阳区阜通东大街6号转换后经纬度：116.480881,39.989410
+     * 地标性建筑举例：天安门转换后经纬度：116.397499,39.908722
+     *
+     * 逆地理编码：将经纬度转换为详细结构化的地址，且返回附近周边的POI、AOI信息。
+     */
+    GEOCODE_GEO("http://restapi.amap.com/v3/geocode/geo?", "地理编码API服务地址"),
+    GEOCODE_REGEO("http://restapi.amap.com/v3/geocode/regeo?", "逆地理编码API服务地址"),
+
+    /**
+     * 距离/路线规划接口
+     */
+    DIRECTION_WALK("http://restapi.amap.com/v3/direction/walking?", "步行路线规划"),
+    DIRECTION_BUS("http://restapi.amap.com/v3/direction/transit/integrated?", "公交/火车路线规划"),
+    DIRECTION_DRIVE("http://restapi.amap.com/v3/direction/driving?", "驾车路线规划"),
+    DIRECTION_BIKE("http://restapi.amap.com/v4/direction/bicycling?", "骑行路径规划"),
+    DIRECTION_TRUCK("http://restapi.amap.com/v4/direction/truck?parameters", "货车路径规划"),
+    DIRECTION_DISTANCE("http://restapi.amap.com/v3/distance?parameters", "距离测量"),
+
+    DISTRICT("http://restapi.amap.com/v3/config/district?", "行政区查询"),
+
+    /**
+     * adcode可以从地理编码接口中获得
+     */
+    WEATHER("http://restapi.amap.com/v3/weather/weatherInfo?", "天气查询"),
+    ;
+
+    MapUrlEnums(String url, String desc) {
+        this.url = url;
+        this.desc = desc;
+    }
+
+    private String url;
+    private String desc;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+}

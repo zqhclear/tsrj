@@ -1,0 +1,42 @@
+package map;
+
+import org.tsrj.common.amp.MapConfig;
+import org.tsrj.common.amp.MapUrlEnums;
+import org.tsrj.common.amp.Md5ForAMap;
+import org.tsrj.common.httpclient.HttpClientUtil;
+import org.tsrj.common.httpclient.httpclient.builder.HCB;
+import org.tsrj.common.httpclient.httpclient.common.HttpConfig;
+
+import java.util.TreeMap;
+
+/**
+ * @Author: qh-zhong
+ * @Date: 2018/5/8
+ */
+public class AmapTest {
+
+    String trueSig = "d41d8cd98f00b204e9800998ecf8427e";        //??????????
+
+    String cityZhongCai = "120.213842,30.209403";
+    String home = "120.076811,30.326518";
+
+    public static void main(String[] args) throws  Exception{
+        TreeMap<String, Object> paramsMap = new TreeMap<>();
+        paramsMap.put("key", MapConfig.KEY);
+        //地理编码
+        paramsMap.put("address", "同仁家园");
+        paramsMap.put("city", "杭州市");
+        String wholeUrl = Md5ForAMap.initUrl(paramsMap, MapUrlEnums.GEOCODE_GEO);
+
+        //逆地理编码
+//        paramsMap.put("location", "120.079248,30.326664");
+//        String wholeUrlUrl = Md5ForAMap.initUrl(paramsMap, MapUrlEnums.GEOCODE_REGEO);
+
+        String result = HttpClientUtil.get(HttpConfig.custom().client(HCB.custom().timeout(20000).build()).url(wholeUrl));
+        System.out.println(result);
+
+
+
+
+    }
+}

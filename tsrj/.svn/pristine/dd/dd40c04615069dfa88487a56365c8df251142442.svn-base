@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/parent/parent.iml" filepath="$PROJECT_DIR$/parent/parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tsrj.iml" filepath="$PROJECT_DIR$/tsrj.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tsrj-api/tsrj-api.iml" filepath="$PROJECT_DIR$/tsrj-api/tsrj-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tsrj-backend/tsrj-backend.iml" filepath="$PROJECT_DIR$/tsrj-backend/tsrj-backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tsrj-common/tsrj-common.iml" filepath="$PROJECT_DIR$/tsrj-common/tsrj-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tsrj-dao/tsrj-dao.iml" filepath="$PROJECT_DIR$/tsrj-dao/tsrj-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tsrj-service/tsrj-service.iml" filepath="$PROJECT_DIR$/tsrj-service/tsrj-service.iml" />
+    </modules>
+  </component>
+</project>

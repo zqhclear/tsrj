@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="tsrj-backend:war">
+    <output-path>$PROJECT_DIR$/tsrj-backend/target</output-path>
+    <root id="archive" name="tsrj-backend.war">
+      <element id="artifact" artifact-name="tsrj-backend:war exploded" />
+    </root>
+  </artifact>
+</component>
